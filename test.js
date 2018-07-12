@@ -1,10 +1,10 @@
 'use strict';
 const canvas = require('./index')({
-    tokens: [
-        process.env.TOKEN,
-        process.env.TOKEN2
-    ],
-    // token: process.env.TOKEN,
+    // tokens: [
+    //     process.env.TOKEN,
+    //     process.env.TOKEN2
+    // ],
+    token: process.env.TOKEN,
     subdomain: process.env.SUBDOMAIN
 });
 const logger = require('./src/utils/logger');
