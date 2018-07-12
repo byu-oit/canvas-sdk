@@ -1,0 +1,37 @@
+{
+  "name": "@byu-oit/canvas-sdk",
+  "version": "0.1.0",
+  "description": "A wrapper around Instructure's Canvas API",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/byu-oit/canvas-sdk.git"
+  },
+  "keywords": [
+    "canvas",
+    "lms",
+    "instructure",
+    "api",
+    "courses",
+    "sections",
+    "data",
+    "sync"
+  ],
+  "author": "Spencer Holman <sah14@byu.edu>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/byu-oit/canvas-sdk/issues"
+  },
+  "homepage": "https://github.com/byu-oit/canvas-sdk#readme",
+  "dependencies": {
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2",
+    "winston": "^3.0.0"
+  }
+}

@@ -1,9 +1,0 @@
-version: 1
-
-name: canvas-sdk
-
-environments:
-  dev:
-    myapp:
-        
-# https://handel.readthedocs.io
