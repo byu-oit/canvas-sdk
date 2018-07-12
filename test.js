@@ -1,10 +1,10 @@
 'use strict';
 const canvas = require('./index')({
-    // tokens: [
-    //     process.env.TOKEN,
-    //     process.env.TOKEN2
-    // ],
-    token: process.env.TOKEN,
+    tokens: [
+        process.env.TOKEN,
+        process.env.TOKEN2
+    ],
+    // token: process.env.TOKEN,
     subdomain: process.env.SUBDOMAIN
 });
 const logger = require('./src/utils/logger');
@@ -25,6 +25,7 @@ const TERM_END_DATE = new Date(new Date().getTime() + TERM_LENGTH);
 const SIS_COURSE_ID = 'canvas-sdk-test-course';
 const COURSE_NAME = 'Canvas-SDK Test Course';
 const COURSE_CODE = 'Canvas-SDK';
+const GRADING_STANDARD_ID = 10; // The BYU A-E Grading Standard
 
 const SIS_SECTION_ID = 'canvas-sdk-test-section';
 const SECTION_NAME = 'Canvas-SDK Test Section';
@@ -45,7 +46,7 @@ async function main() {
     /****************** Setup ******************/
     const account = await canvas.accounts.add(ACCOUNT_NAME, SIS_ACCOUNT_ID, ROOT_ACCOUNT_ID);
     const term = await canvas.terms.add(TERM_NAME, TERM_START_DATE, TERM_END_DATE, SIS_TERM_ID, TERM_END_DATE);
-    const course = await canvas.courses.add(COURSE_NAME, COURSE_CODE, SIS_TERM_ID, SIS_COURSE_ID, account.id);
+    const course = await canvas.courses.add(COURSE_NAME, COURSE_CODE, SIS_TERM_ID, SIS_COURSE_ID, account.id, GRADING_STANDARD_ID);
     const section = await canvas.sections.add(SIS_COURSE_ID, SIS_SECTION_ID, SECTION_NAME);
     const user = await canvas.users.add(USER_NAME, USER_NAME, USER_EMAIL, SIS_USER_ID, USER_LOGIN_ID);
     const user2 = await canvas.users.add(USER_NAME, USER_NAME, USER_EMAIL, SIS_USER_ID2, USER_LOGIN_ID + '2');
@@ -91,7 +92,7 @@ async function main() {
         assert.equal(course.enrollment_term_id, term.id);
         assert.equal(course.sis_course_id, SIS_COURSE_ID);
         assert.equal(course.account_id, account.id);
-        assert.equal(course.grading_standard_id, 10); // The BYU A-E Grading Standard
+        assert.equal(course.grading_standard_id, GRADING_STANDARD_ID);
         const courses = await canvas.courses.getAllByTerm(SIS_TERM_ID);
         courses[0].enrollments = [];
         assert.deepEqual(courses, [await canvas.courses.get(SIS_COURSE_ID)]);

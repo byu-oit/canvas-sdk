@@ -14,7 +14,6 @@ const STARTING_RATE_LIMIT_REMAINING = 700;
 module.exports = function(config) {
     const canvas = {};
 
-    //FIXME: Allow support for multiple tokens and randomly choosing one.
     if(config.tokens) {
         canvas.tokens = [];
         let i = 0;
@@ -40,9 +39,9 @@ module.exports = function(config) {
             return largestLimitRemainingToken.value;
         };
 
-        canvas.updateTokenRateLimit = function(token, newRateLimitRemaining) {
+        canvas.updateTokenRateLimit = function(usedToken, newRateLimitRemaining) {
             for(const token of canvas.tokens) {
-                if(token.value === token) {
+                if(token.value === usedToken) {
                     token.rateLimitRemaining = newRateLimitRemaining
                 }
             }

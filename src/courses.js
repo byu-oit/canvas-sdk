@@ -1,7 +1,6 @@
 'use strict';
 const logger = require('./utils/logger');
 const uuid = require('uuid');
-const GRADING_STANDARD_ID = '10'; // The BYU A-E Grading Standard
 
 module.exports = function(canvas) {
     const courses = {};
@@ -15,7 +14,7 @@ module.exports = function(canvas) {
         }
     };
 
-    courses.add = async function(courseName, courseCode, sisTermId, sisCourseId, accountId) {
+    courses.add = async function(courseName, courseCode, sisTermId, sisCourseId, accountId, gradingStandardId) {
         const options = {
             'course': {
                 'name': courseName,
@@ -23,7 +22,7 @@ module.exports = function(canvas) {
                 'term_id': `sis_term_id:${sisTermId}`,
                 'sis_course_id': sisCourseId,
                 'account_id': accountId,
-                'grading_standard_id': GRADING_STANDARD_ID
+                'grading_standard_id': gradingStandardId
             }
         };
         logger.debug(`canvas.course.add options: ${JSON.stringify(options)}`);
