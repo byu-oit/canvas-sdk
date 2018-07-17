@@ -115,7 +115,17 @@ module.exports = function(canvas) {
         }
     };
 
+    sections.getAllEnrollments = async function(sisSectionId) {
+        return await canvas.request('GET', `sections/sis_section_id:${sisSectionId}/enrollments`);
+    };
+
     sections.delete = async function(sisSectionId) {
+        // Delete all enrollments prior to deleting section
+        const enrollments = await sections.getAllEnrollments(sisSectionId);
+        for(let enrollment of enrollments) {
+            await sections.changeEnrollment(sisSectionId, enrollment.sis_user_id, "delete");
+        }
+
         const newId = uuid();
         const options = {
             course_section: {
@@ -129,9 +139,9 @@ module.exports = function(canvas) {
         } else {
             res = await canvas.request('DELETE', `sections/${res.id}`);
             if(res) {
-                logger.info(`Successfully deleted course with sisSectionId = ${sisSectionId}`);
+                logger.info(`Successfully deleted section with sisSectionId = ${sisSectionId}`);
             } else {
-                logger.error(`Failed to delete course with sisSectionId = ${sisSectionId}`);
+                logger.error(`Failed to delete section with sisSectionId = ${sisSectionId}`);
             }
         }
     };
