@@ -116,7 +116,7 @@ module.exports = function(canvas) {
     };
 
     sections.getAllEnrollments = async function(sisSectionId) {
-        return await canvas.request('GET', `sections/sis_section_id:${sisSectionId}/enrollments`);
+        return await canvas.requestAll(`sections/sis_section_id:${sisSectionId}/enrollments`);
     };
 
     sections.delete = async function(sisSectionId) {
