@@ -99,8 +99,8 @@ module.exports = function(canvas) {
         }
     };
 
-    sections.changeEnrollment = async function(sisSectionId, sisUserId, task) {
-        const enrollment = await sections.getEnrollment(sisSectionId, sisUserId);
+    sections.changeEnrollment = async function(sisSectionId, sisUserId, task, type) {
+        const enrollment = await sections.getEnrollment(sisSectionId, sisUserId, type);
         if(enrollment) {
             const options = {
                 task: task
