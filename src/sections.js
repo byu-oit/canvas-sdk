@@ -78,11 +78,15 @@ module.exports = function(canvas) {
         }
     };
 
-    sections.getEnrollment = async function(sisSectionId, sisUserId) {
+    sections.getEnrollment = async function(sisSectionId, sisUserId, type) {
         if(!sisSectionId) {
             logger.error("Must provide sisSectionId to sections.getEnrollment");
         }
-        const res = await canvas.request('GET', `users/sis_user_id:${sisUserId}/enrollments?sis_section_id=${sisSectionId}&state[]=active&state[]=invited&state[]=inactive&state[]=completed`);
+        let url = `users/sis_user_id:${sisUserId}/enrollments?sis_section_id=${sisSectionId}&state[]=active&state[]=invited&state[]=inactive&state[]=completed`;
+        if(type) {
+            url = `${url}&type[]=${type}`;
+        }
+        const res = await canvas.request('GET', url.toString());
         if(res) {
             if(res.length > 1) {
                 logger.error('Too many enrollments returned in sections.getEnrollment');

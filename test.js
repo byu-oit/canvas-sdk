@@ -113,6 +113,10 @@ async function main() {
         assert.strictEqual((sections[0].students[0].sis_user_id), SIS_USER_ID);
         let enrollment = await canvas.sections.getEnrollment(SIS_SECTION_ID, SIS_USER_ID);
         assert.strictEqual(enrollment.sis_user_id, SIS_USER_ID);
+        enrollment = await canvas.sections.getEnrollment(SIS_SECTION_ID, SIS_USER_ID, 'StudentEnrollment');
+        assert.strictEqual(enrollment.sis_user_id, SIS_USER_ID);
+        enrollment = await canvas.sections.getEnrollment(SIS_SECTION_ID, SIS_USER_ID, 'TeacherEnrollment');
+        assert.ok(! enrollment);
         await canvas.sections.changeEnrollment(SIS_SECTION_ID, SIS_USER_ID, 'deactivate');
         enrollment = await canvas.sections.getEnrollment(SIS_SECTION_ID, SIS_USER_ID);
         assert.strictEqual(enrollment.enrollment_state, 'inactive');
