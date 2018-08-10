@@ -127,7 +127,7 @@ module.exports = function(canvas) {
         // Delete all enrollments prior to deleting section
         const enrollments = await sections.getAllEnrollments(sisSectionId);
         for(let enrollment of enrollments) {
-            await sections.changeEnrollment(sisSectionId, enrollment.sis_user_id, "delete");
+            await sections.changeEnrollment(sisSectionId, enrollment.sis_user_id, "delete", enrollment.type);
         }
 
         const newId = uuid();
