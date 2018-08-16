@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/byu-oit/canvas-sdk#readme",
   "dependencies": {
+    "promise-subarrays": "^0.1.1",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
     "winston": "^3.0.0"

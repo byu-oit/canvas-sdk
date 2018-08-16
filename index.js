@@ -10,9 +10,12 @@ const users = require('./src/users');
 
 const CANVAS_MAX_ITEMS_PER_PAGE = 100;
 const STARTING_RATE_LIMIT_REMAINING = 700;
+const DEFAULT_MAX_SIMULTANEOUS_REQUESTS = 10;
 
 module.exports = function(config) {
     const canvas = {};
+
+    canvas.maxSimultaneousRequests = config.maxSimultaneousRequests || DEFAULT_MAX_SIMULTANEOUS_REQUESTS;
 
     if(config.tokens) {
         canvas.tokens = [];

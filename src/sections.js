@@ -1,6 +1,7 @@
 'use strict';
 const logger = require('./utils/logger');
 const uuid = require('uuid');
+const PromiseArray = require('promise-subarrays');
 
 module.exports = function(canvas) {
     const sections = {};
@@ -38,15 +39,21 @@ module.exports = function(canvas) {
     sections.getAllByTerm = async function(sisTermId) {
         const courses = await canvas.courses.getAllByTerm(sisTermId);
         const sections = [];
+        const promiseArray = PromiseArray();
+
         for(let course of courses) {
-            logger.info(`Getting sections for course ${course.sis_course_id}`);
-            const courseSections = await canvas.requestAll(`courses/${course.id}/sections?include=students`);
-            for(let courseSection of courseSections) {
-                courseSection.account_id = course.account_id;
-                courseSection.workflow_state = course.workflow_state;
-                sections.push(courseSection);
-            }
+            promiseArray.push(async function(course) {
+                logger.info(`Getting sections for course ${course.sis_course_id}`);
+                const courseSections = await canvas.requestAll(`courses/${course.id}/sections?include=students`);
+                for(let courseSection of courseSections) {
+                    courseSection.account_id = course.account_id;
+                    courseSection.workflow_state = course.workflow_state;
+                    sections.push(courseSection);
+                }
+            }, [course]);
         }
+
+        await promiseArray.awaitAll(canvas.maxSimultaneousRequests);
         return sections;
     };
 

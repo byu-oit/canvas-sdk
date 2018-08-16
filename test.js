@@ -5,7 +5,8 @@ const canvas = require('./index')({
     //     process.env.TOKEN2
     // ],
     token: process.env.TOKEN,
-    subdomain: process.env.SUBDOMAIN
+    subdomain: process.env.SUBDOMAIN,
+    maxSimultaneousRequests: 5
 });
 const logger = require('./src/utils/logger');
 const assert = require('assert');
