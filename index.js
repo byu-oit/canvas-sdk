@@ -28,6 +28,7 @@ module.exports = function(config) {
             })
         }
         canvas.getToken = function() {
+            shuffle(canvas.tokens);
             let largestLimitRemainingToken;
             for(const token of canvas.tokens) {
                 if(!largestLimitRemainingToken) {
@@ -153,3 +154,11 @@ module.exports = function(config) {
 
     return canvas;
 };
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
