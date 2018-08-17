@@ -1,6 +1,7 @@
 'use strict';
 const { URL } = require('url');
 const logger = require('./src/utils/logger');
+const utils = require('./src/utils');
 const request = require('request-promise');
 const accounts = require('./src/accounts');
 const terms = require('./src/terms');
@@ -101,7 +102,7 @@ module.exports = function(config) {
         return items;
     };
 
-    canvas.requestInternal = async function(method, uri, data, formFlag) {
+    canvas.requestInternal = async function(method, uri, data, formFlag, tryingAgain) {
         const startTime = Date.now();
         if(method === 'GET' && data) {
             logger.error("Cannot send data in GET request");
@@ -148,6 +149,12 @@ module.exports = function(config) {
 
                 logger.warn(`RequestFailed: ${JSON.stringify(e)}`);
                 logger.debug(`Canvas Request Delay: ${(Date.now() - startTime) / 60000}`);
+
+                if(!tryingAgain && e.error.code === "ENOTFOUND") {
+                    logger.info("Waiting 8 seconds, then retrying");
+                    await utils.sleep(8000);
+                    return canvas.requestInternal(method, uri, data, formFlag, true);
+                }
                 return false;
             }
         }
