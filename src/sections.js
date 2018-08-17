@@ -133,9 +133,12 @@ module.exports = function(canvas) {
     sections.delete = async function(sisSectionId) {
         // Delete all enrollments prior to deleting section
         const enrollments = await sections.getAllEnrollments(sisSectionId);
+        const promiseArray = PromiseArray();
         for(let enrollment of enrollments) {
-            await sections.changeEnrollment(sisSectionId, enrollment.sis_user_id, "delete", enrollment.type);
+            promiseArray.push(sections.changeEnrollment, [sisSectionId, enrollment.sis_user_id, "delete", enrollment.type]);
         }
+
+        await promiseArray.awaitAll(canvas.maxSimultaneousRequests);
 
         const newId = uuid();
         const options = {
