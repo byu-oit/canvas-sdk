@@ -137,8 +137,12 @@ module.exports = function(config) {
                 return res.body;
             } catch(e) {
                 // Don't log access token
-                delete e.options.headers.Authorization;
-                delete e.response.request.headers.Authorization;
+                if(e.options.headers.Authorization) {
+                    delete e.options.headers.Authorization;
+                }
+                if(e.response.request.headers.Authorization) {
+                    delete e.response.request.headers.Authorization;
+                }
 
                 logger.warn(`RequestFailed: ${JSON.stringify(e)}`);
                 return false;
