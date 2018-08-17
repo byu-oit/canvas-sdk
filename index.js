@@ -102,6 +102,7 @@ module.exports = function(config) {
     };
 
     canvas.requestInternal = async function(method, uri, data, formFlag) {
+        const startTime = Date.now();
         if(method === 'GET' && data) {
             logger.error("Cannot send data in GET request");
         } else {
@@ -134,6 +135,7 @@ module.exports = function(config) {
                 if(canvas.updateTokenRateLimit) {
                     canvas.updateTokenRateLimit(token, rateLimitRemaining);
                 }
+                logger.debug(`Canvas Request Delay: ${(Date.now() - startTime) / 1000} seconds`);
                 return res.body;
             } catch(e) {
                 // Don't log access token
@@ -145,6 +147,7 @@ module.exports = function(config) {
                 }
 
                 logger.warn(`RequestFailed: ${JSON.stringify(e)}`);
+                logger.debug(`Canvas Request Delay: ${(Date.now() - startTime) / 60000}`);
                 return false;
             }
         }
