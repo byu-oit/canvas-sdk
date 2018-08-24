@@ -150,7 +150,7 @@ module.exports = function(config) {
                 logger.warn(`RequestFailed: ${JSON.stringify(e)}`);
                 logger.debug(`Canvas Request Delay: ${(Date.now() - startTime) / 60000}`);
 
-                if(!tryingAgain && e.error.code === "ENOTFOUND") {
+                if(!tryingAgain && e.error && e.error.code === "ENOTFOUND") {
                     logger.info("Waiting 8 seconds, then retrying");
                     await utils.sleep(8000);
                     return canvas.requestInternal(method, uri, data, formFlag, true);

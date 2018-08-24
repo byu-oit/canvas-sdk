@@ -44,10 +44,13 @@ module.exports = function(canvas) {
         for(let course of courses) {
             promiseArray.push(async function(course) {
                 logger.info(`Getting sections for course ${course.sis_course_id}`);
-                const courseSections = await canvas.requestAll(`courses/${course.id}/sections?include=students`);
+                const courseSections = await canvas.requestAll(`courses/${course.id}/sections`); // include[]=enrollments results in a 504 on large courses.  Work around below.
                 for(let courseSection of courseSections) {
+                    // Now pull down just the section but include the students and enrollments
+                    courseSection = await canvas.request('GET', `courses/${course.id}/sections/${courseSection.id}?include[]=students&include[]=enrollments`);
                     courseSection.account_id = course.account_id;
                     courseSection.workflow_state = course.workflow_state;
+
                     sections.push(courseSection);
                 }
             }, [course]);
