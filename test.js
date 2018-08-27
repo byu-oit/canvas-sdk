@@ -112,6 +112,8 @@ async function main() {
         sections = await canvas.sections.getAllByTerm(SIS_TERM_ID);
         assert.strictEqual(sections[0].students.length, 1);
         assert.strictEqual((sections[0].students[0].sis_user_id), SIS_USER_ID);
+        const enrollments = await canvas.users.getEnrollments(SIS_USER_ID);
+        assert.strictEqual(enrollments.length, 1);
         let enrollment = await canvas.sections.getEnrollment(SIS_SECTION_ID, SIS_USER_ID);
         assert.strictEqual(enrollment.sis_user_id, SIS_USER_ID);
         enrollment = await canvas.sections.getEnrollment(SIS_SECTION_ID, SIS_USER_ID, 'StudentEnrollment');

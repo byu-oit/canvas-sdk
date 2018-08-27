@@ -36,6 +36,10 @@ module.exports = function(canvas) {
         return await canvas.request('GET', `users/${userId}`);
     };
 
+    users.getEnrollments = async function(sisUserId) {
+        return await canvas.requestAll(`users/sis_user_id:${sisUserId}/enrollments`);
+    };
+
     users.add = async function(name, sortableName, email, sisUserId, loginId) {
         const options = {
             'user': {
