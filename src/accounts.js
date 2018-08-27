@@ -41,7 +41,17 @@ module.exports = function(canvas) {
     };
 
     accounts.getAdmins = async function(accountId = 1) {
-        return await canvas.request('GET', `accounts/${accountId}/admins`);
+        return await canvas.requestAll(`accounts/${accountId}/admins`);
+    };
+
+    accounts.isAdmin = async function(sisUserId) {
+        const admins = await accounts.getAdmins();
+        for(let admin of admins) {
+            if(admin.user.sis_user_id === sisUserId) {
+                return true;
+            }
+        }
+        return false;
     };
 
     accounts.delete = async function(sisAccountId) {
