@@ -124,8 +124,14 @@ module.exports = function(canvas) {
                 return false;
             }
         } else {
-            logger.error(`Enrollment not found while trying to apply task = ${task} to the enrollment of user with sisUserId = ${sisUserId} to section with sisSectionId = ${sisSectionId}`);
-            return false;
+            const msg = `Enrollment not found while trying to apply task = ${task} to the enrollment of user with sisUserId = ${sisUserId} to section with sisSectionId = ${sisSectionId}`;
+            if(task === "delete") {
+                logger.info(msg);
+                return true;
+            } else {
+                logger.error(msg);
+                return false;
+            }
         }
     };
 
