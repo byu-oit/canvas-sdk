@@ -88,7 +88,7 @@ module.exports = function(config) {
         do {
             res = await canvas.requestInternal('GET', url.toString());
             array = [];
-            if(internalArrayKey) {
+            if(internalArrayKey&&res[internalArrayKey]) {
                 array = res[internalArrayKey];
             } else {
                 array = res;
