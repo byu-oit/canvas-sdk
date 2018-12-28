@@ -7,10 +7,10 @@ repo_url: https://github.com/byu-oit/canvas-sdk  # optional
 software:
   - name: canvas-sdk  # optional
     deploy_to_cmdb: true # optional
-    type: ''
+    type: nodejs api
     aliases:  # optional
     short_description: # optional
-    assignment_group: ''
+    assignment_group: gro:AD-Academic Information Management
     notes: # optional
     maintained_by: # optional
       - byu-oit-cd-bot
@@ -32,7 +32,7 @@ software:
           product_page:
           physical_url:
           virtual_url:
-        hosting_location: ''
+        hosting_location: AWS
         aws_account:  # optional
         relationships: # optional
           depends_on:  # optional
