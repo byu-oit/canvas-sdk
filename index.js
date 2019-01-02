@@ -89,9 +89,17 @@ module.exports = function(config) {
             res = await canvas.requestInternal('GET', url.toString());
             array = [];
             if(internalArrayKey&&res[internalArrayKey]) {
-                array = res[internalArrayKey];
-            } else {
-                array = res;
+              array = res[internalArrayKey];
+            }
+            else if(internalArrayKey==undefined&&Array.isArray(res))
+            {
+              array = res;
+            }
+            else
+            {
+              logger.error(`Unexpected canvas response "${internalArrayKey}":\n${res}`);
+              logger.error(`Unexpected canvas response "${internalArrayKey}":\n${JSON.stringify(res,null,2)}`);
+              throw new Error(`Canvas error in call to ${url.toString()}`);
             }
             for(let item of array) {
                 items.push(item);
