@@ -139,6 +139,24 @@ module.exports = function(canvas) {
         return await canvas.requestAll(`sections/sis_section_id:${sisSectionId}/enrollments`);
     };
 
+
+
+    sections.updName = async function(sisSectionId,name)
+    {
+      const options = { course_section: { name:name } };
+      const res = await canvas.request('PUT', `sections/sis_section_id:${sisSectionId}`, options);
+      if(res)
+      {
+        logger.info(`Successfully updated section name to ${name} for ${sisSectionId}`);
+      }
+      else
+      {
+        logger.error(`Failed to update section name to ${name} for ${sisSectionId}`);
+      }
+    };
+
+
+
     sections.delete = async function(sisSectionId) {
         // Delete all enrollments prior to deleting section
         const enrollments = await sections.getAllEnrollments(sisSectionId);

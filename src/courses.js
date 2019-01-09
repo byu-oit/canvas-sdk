@@ -61,6 +61,24 @@ module.exports = function(canvas) {
         }
     };
 
+
+
+    courses.updName = async function(sisCourseId,name)
+    {
+      const options = { course: { name:name } };
+      const res = await canvas.request('PUT', `courses/sis_course_id:${sisCourseId}`, options);
+      if(res)
+      {
+        logger.info(`Successfully updated course name to ${name} for ${sisCourseId}`);
+      }
+      else
+      {
+        logger.error(`Failed to update course name to ${name} for ${sisCourseId}`);
+      }
+    };
+
+
+
     courses.delete = async function(sisCourseId) {
         const newId = uuid();
         const options = {
