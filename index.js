@@ -113,6 +113,7 @@ module.exports = function(config) {
   canvas.requestInternal = async function(method, uri, data, formFlag, tryingAgain)
   {
     const startTime = Date.now();
+    delete canvas.error
     if(method === 'GET' && data)
     {
       logger.error("Cannot send data in GET request");
@@ -162,6 +163,7 @@ module.exports = function(config) {
           delete e.response.request.headers.Authorization;
         }
 
+        canvas.error=e
         logger.warn(`RequestFailed: ${JSON.stringify(e)}`);
         logger.debug(`Canvas Request Delay: ${(Date.now() - startTime) / 60000}`);
 
