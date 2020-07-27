@@ -22,15 +22,38 @@ exports.dtFmt = dt =>
   ;
 };
 
+exports.filter  = null
+exports.glb     = {}
+exports.tab     = undefined
+exports.log =
+{
+  err: (...msg) =>
+  {
+    if(exports.glb.test) return
+    for(const err of msg)
+    {
+      if(err instanceof Error)console.log(`${err}\nerror object\n${JSON.stringify(err,exports.filter,exports.tab)}\nerror object string\n${err.stack}\nerror stack\n${exports.dtFmt()}: ${((new Error()).stack||'\n\n').split('\n')[2].trim()}`)
+      else                    console.log(err)
+    }
+  },
+  msg: (...msg) => { if(!exports.glb.test) for(const txt of msg) console.log(txt) }
+}
+
 exports.hdr = () =>
 {
-  return `${exports.dtFmt()}: ${((new Error()).stack||'\n\n').split('\n')[2].trim()}`;
-};
+  const stk = (new Error()).stack || ''
+  const str = `${exports.dtFmt()}: ${stk.split('\n')[2].trim()}`
+  const lid = str.replace(`(${MDIR}`, '(.')
+  return lid
+}
 
 exports.err = err =>
 {
-  return `${err}\n${JSON.stringify(err,null,2)}\n${err.stack}\n${exports.dtFmt()}: ${((new Error()).stack||'\n\n').split('\n')[2].trim()}`;
-};
+  const stk = (new Error()).stack || ''
+  const str = `${exports.dtFmt()}: ${stk.split('\n')[2].trim()}`
+  const lid = str.replace(`(${MDIR}`, '(.')
+  return `${err} err\n${JSON.stringify(err,null,2)} str\n${err.stack} stk\n${lid}`
+}
 
 exports.randomInt = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);

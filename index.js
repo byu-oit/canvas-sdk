@@ -2,6 +2,7 @@
 const { URL } = require('url');
 const logger = require('./src/utils/logger');
 const utils = require('./src/utils');
+const Util = require('./src/utils');
 const request = require('request-promise');
 const accounts = require('./src/accounts');
 const terms = require('./src/terms');
@@ -75,40 +76,52 @@ module.exports = function(config) {
   /*
    * Recursively paginates through data.
    */
-  canvas.requestAll = async function(path, internalArrayKey) {
-    const url = new URL(`${canvas.baseurl}/${path}`);
-    const items = [];
+  canvas.requestAll = async function(path, internalArrayKey)
+  {
+    const url = new URL(`${canvas.baseurl}/${path}`)
+    const items = []
 
-    url.searchParams.set('per_page', CANVAS_MAX_ITEMS_PER_PAGE);
-    url.searchParams.set('page', 1);
-    let res;
-    let array;
-    let page = 1;
+    let array
+    let dup = 0
+    let page = 0
+    let res
+    let objKey
+    let objIdx = {}
 
-    do {
-      res = await canvas.requestInternal('GET', url.toString());
-      array = [];
-      if(internalArrayKey&&res[internalArrayKey]) {
-        array = res[internalArrayKey];
+    do
+    {
+      url.searchParams.set('page', ++page)
+      url.searchParams.set('per_page', CANVAS_MAX_ITEMS_PER_PAGE)
+
+      res = await canvas.requestInternal('GET', url.toString())
+      array = []
+      if(internalArrayKey&&res[internalArrayKey])
+      {
+        array = res[internalArrayKey]
       }
       else if(internalArrayKey==undefined&&Array.isArray(res))
       {
-        array = res;
+        array = res
       }
       else
       {
-        logger.error(`Unexpected canvas response "${internalArrayKey}":\n${res}`);
-        logger.error(`Unexpected canvas response "${internalArrayKey}":\n${JSON.stringify(res,null,2)}`);
-        throw new Error(`Canvas error in call to ${url.toString()}`);
+        logger.error(`Unexpected canvas response "${internalArrayKey}":\n${res}`)
+        logger.error(`Unexpected canvas response "${internalArrayKey}":\n${JSON.stringify(res,null,2)}`)
+        throw new Error(`Canvas error in call to ${url.toString()}`)
       }
-      for(let item of array) {
-        items.push(item);
+      dup=0
+      for(let item of array)
+      {
+        objKey=`${item.id}.${item.user_id}.${item.course_id}.${item.type}.${(item.user||{}).id}`
+        objIdx[objKey]=(objIdx[objKey]||0)+1
+        if(objIdx[objKey]===1)items.push(item)
+        else dup++
       }
-      url.searchParams.set('page', ++page);
-    } while(array.length === CANVAS_MAX_ITEMS_PER_PAGE); // If response contains less than 100 items, it must be the last page.
+    }
+    while(array.length === CANVAS_MAX_ITEMS_PER_PAGE && dup!==array.length) // If response contains less than 100 items, it must be the last page.
 
-    return items;
-  };
+    return items
+  }
 
   canvas.requestInternal = async function(method, uri, data, formFlag, tryingAgain)
   {
