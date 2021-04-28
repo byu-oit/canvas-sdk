@@ -7,7 +7,7 @@ module.exports = function(canvas) {
     const terms = {};
 
     terms.exists = async function(sisTermId) {
-        const terms = await canvas.request('GET', `accounts/1/terms`);
+        const terms = await canvas.request('GET', `accounts/1/terms?page=1&per_page=100`);
         if(terms) {
             for(const term of terms.enrollment_terms) {
                 if(term.sis_term_id === sisTermId) {
