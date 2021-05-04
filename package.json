@@ -1,6 +1,6 @@
 {
   "name": "@byu-oit/canvas-sdk",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "description": "A wrapper around Instructure's Canvas API",
   "main": "index.js",
   "directories": {

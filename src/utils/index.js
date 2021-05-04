@@ -22,6 +22,7 @@ exports.dtFmt = dt =>
   ;
 };
 
+exports.base    = __dirname
 exports.filter  = null
 exports.glb     = {}
 exports.tab     = undefined
@@ -43,7 +44,7 @@ exports.hdr = () =>
 {
   const stk = (new Error()).stack || ''
   const str = `${exports.dtFmt()}: ${stk.split('\n')[2].trim()}`
-  const lid = str.replace(`(${MDIR}`, '(.')
+  const lid = str.replace(`(${exports.base}`, '(.')
   return lid
 }
 
@@ -51,7 +52,7 @@ exports.err = err =>
 {
   const stk = (new Error()).stack || ''
   const str = `${exports.dtFmt()}: ${stk.split('\n')[2].trim()}`
-  const lid = str.replace(`(${MDIR}`, '(.')
+  const lid = str.replace(`(${exports.base}`, '(.')
   return `${err} err\n${JSON.stringify(err,null,2)} str\n${err.stack} stk\n${lid}`
 }
 

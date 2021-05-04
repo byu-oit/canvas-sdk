@@ -78,7 +78,6 @@ module.exports = function(config) {
    */
   canvas.requestAll = async function(path, internalArrayKey)
   {
-    const url = new URL(`${canvas.baseurl}/${path}`)
     const items = []
 
     let array
@@ -90,8 +89,15 @@ module.exports = function(config) {
 
     do
     {
-      url.searchParams.set('page', ++page)
-      url.searchParams.set('per_page', CANVAS_MAX_ITEMS_PER_PAGE)
+      page++
+      const flgCN = page > 1 && !!canvas.next
+      //const url = new URL( `${canvas.baseurl}/${path}` )
+      const url = new URL( flgCN ? canvas.next : `${canvas.baseurl}/${path}` )
+      if(!flgCN)
+      {
+        url.searchParams.set('page', page)
+        url.searchParams.set('per_page', CANVAS_MAX_ITEMS_PER_PAGE)
+      }
 
       res = await canvas.requestInternal('GET', url.toString())
       array = []
@@ -160,6 +166,16 @@ module.exports = function(config) {
       try
       {
         const res = await request(options);
+        canvas.next = false
+        if(res.headers['link'])
+        {
+          for(const link of res.headers['link'].split(','))
+          {
+            const part = link.split('; ')
+            if(part[1]!=='rel="next"') continue
+            canvas.next = part[0].replace(/^<(.*)>$/,'$1')
+          }
+        }
         const rateLimitRemaining = res.headers['x-rate-limit-remaining'];
         logger.debug(`Current Token Rate Limit Remaining: ${rateLimitRemaining}`);
         if(canvas.updateTokenRateLimit) {
@@ -180,7 +196,7 @@ module.exports = function(config) {
         logger.warn(`RequestFailed: ${JSON.stringify(e)}`);
         logger.debug(`Canvas Request Delay: ${(Date.now() - startTime) / 60000}`);
 
-        if(!tryingAgain && e.error && e.error.code === "ENOTFOUND") {
+        if(!tryingAgain && e.error && ( e.error.code === "ENOTFOUND" || e.error.code === "ETIMEDOUT" ) ) {
           logger.info("Waiting 8 seconds, then retrying");
           await utils.sleep(8000);
           return canvas.requestInternal(method, uri, data, formFlag, true);
@@ -195,6 +211,7 @@ module.exports = function(config) {
   canvas.courses = courses(canvas);
   canvas.sections = sections(canvas);
   canvas.users = users(canvas);
+  canvas.next = false
 
   return canvas;
 };
